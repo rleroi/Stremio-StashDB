@@ -100,10 +100,6 @@ function startAddon() {
 
     console.log('✅ Environment configuration loaded');
 
-    // Start the scraper (runs immediately and every 24h)
-    // Uses environment variables for credentials
-    startScraper();
-
     // Start HTTP server
     const port = process.env.PORT || 7001;
     serveHTTP(builder.getInterface(), { port }).then(({ server }) => {
@@ -113,6 +109,10 @@ function startAddon() {
       console.log(`   3. Click "Install" (browse only) or "Configure" (for streaming)`);
       console.log(`\n   💡 Tip: Users can browse without config, but need Easynews`);
       console.log(`      credentials to stream videos.\n`);
+      
+      // Start the scraper after HTTP server is ready
+      // This ensures Beamup health checks pass before the scraper blocks
+      startScraper();
     }).catch(err => {
       console.error('Failed to start HTTP server:', err);
       process.exit(1);
