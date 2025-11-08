@@ -106,15 +106,17 @@ function startAddon() {
 
     // Start HTTP server
     const port = process.env.PORT || 7001;
-    serveHTTP(builder.getInterface(), { port });
-    
-    console.log(`\n🚀 Addon running at http://localhost:${port}/manifest.json`);
-    console.log(`\n📦 Install in Stremio:`);
-    console.log(`   1. Open Stremio → Settings → Addons`);
-    console.log(`   2. Paste: http://localhost:${port}/manifest.json`);
-    console.log(`   3. Click "Install" (browse only) or "Configure" (for streaming)`);
-    console.log(`\n   💡 Tip: Users can browse without config, but need Easynews`);
-    console.log(`      credentials to stream videos.\n`);
+    serveHTTP(builder.getInterface(), { port }).then(({ server }) => {
+      console.log(`\n📦 Install in Stremio:`);
+      console.log(`   1. Open Stremio → Settings → Addons`);
+      console.log(`   2. Paste: http://localhost:${port}/manifest.json`);
+      console.log(`   3. Click "Install" (browse only) or "Configure" (for streaming)`);
+      console.log(`\n   💡 Tip: Users can browse without config, but need Easynews`);
+      console.log(`      credentials to stream videos.\n`);
+    }).catch(err => {
+      console.error('Failed to start HTTP server:', err);
+      process.exit(1);
+    });
   } catch (error) {
     console.error('Failed to start addon:', error.message);
     process.exit(1);

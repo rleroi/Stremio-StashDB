@@ -174,8 +174,12 @@ async function scrape() {
 function startScraper() {
   console.log('Starting scraper...');
   
-  // Run initial scrape
-  scrape();
+  // Delay initial scrape by 10 seconds to allow HTTP server to respond to health checks
+  // This prevents Beamup from killing the container during startup
+  console.log('Initial scrape will start in 10 seconds...');
+  setTimeout(() => {
+    scrape();
+  }, 10000);
 
   // Schedule scraping every 24 hours (86400000 ms)
   const interval = setInterval(() => {
