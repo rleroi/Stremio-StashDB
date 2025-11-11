@@ -136,12 +136,18 @@ async function scrape() {
       return;
     }
 
-    const config = { easynewsUsername, easynewsPassword, stashdbApiKey };
+      const config = { easynewsUsername, easynewsPassword, stashdbApiKey };
 
-    // Fetch trending scenes from StashDB
-    const targetCount = parseInt(process.env.SCRAPE_COUNT || '100', 10);
-    const scenes = await stashdb.getTrendingScenes(config.stashdbApiKey, targetCount);
-    console.log(`Found ${scenes.length} trending scenes from StashDB`);
+      // Fetch trending scenes from StashDB
+      const targetCount = parseInt(process.env.SCRAPE_COUNT || '100', 10);
+      const scenes = await stashdb.getTrendingScenes(config.stashdbApiKey, targetCount);
+      console.log(`Found ${scenes.length} trending scenes from StashDB`);
+
+      const previousCacheSize = cache.size();
+      if (previousCacheSize > 0) {
+        console.log(`Clearing cache with ${previousCacheSize} scenes from previous scrape`);
+      }
+      cache.clear();
 
     if (scenes.length === 0) {
       console.log('No scenes to process');
