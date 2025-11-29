@@ -138,6 +138,10 @@ async function scrape() {
 
     const config = { easynewsUsername, easynewsPassword, stashdbApiKey };
 
+    // Clear cache before starting new scrape to replace old data
+    cache.clear();
+    console.log('Cache cleared');
+
     // Fetch trending scenes from StashDB
     const targetCount = parseInt(process.env.SCRAPE_COUNT || '100', 10);
     const scenes = await stashdb.getTrendingScenes(config.stashdbApiKey, targetCount);
